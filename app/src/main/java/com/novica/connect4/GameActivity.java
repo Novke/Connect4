@@ -1,21 +1,17 @@
 package com.novica.connect4;
 
-import android.graphics.Color;
 import android.os.Bundle;
-
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TableLayout;
 import android.widget.TableRow;
+import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
-import androidx.navigation.ui.NavigationUI;
 
 import com.novica.connect4.databinding.ActivityGameBinding;
+import com.novica.connect4.listener.ColumnClickListener;
 
 public class GameActivity extends AppCompatActivity {
 
@@ -32,19 +28,8 @@ public class GameActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         init();
-
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_game);
-        appBarConfiguration = new AppBarConfiguration.Builder(navController.getGraph()).build();
-        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
-
     }
 
-    @Override
-    public boolean onSupportNavigateUp() {
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_game);
-        return NavigationUI.navigateUp(navController, appBarConfiguration)
-                || super.onSupportNavigateUp();
-    }
 
     private void init(){
         constraintLayout = findViewById(R.id.constraintLayout);
@@ -57,13 +42,17 @@ public class GameActivity extends AppCompatActivity {
         for (int i = 0; i < 6; i++){
             TableRow row = new TableRow(this);
             for (int j = 0; j < 7; j++) {
-                Button button = new Button(this);
-                button.setText("");
+                ImageButton button = new ImageButton(this);
                 button.setId(j);
-                button.setBackgroundColor(Color.BLACK);
+                button.setImageResource(R.drawable.circle_empty);
+                button.setOnClickListener(new ColumnClickListener(j, this));
                 row.addView(button);
             }
             tableLayout.addView(row);
         }
+    }
+
+    public void pressedColumn(int index){
+        Toast.makeText(this, ("Pressed column: " + (index+1)), Toast.LENGTH_SHORT).show();
     }
 }
